@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+.env
+.DS_Store
+
+# The evaluator already has the task pack. Avoid publishing customer/support exports.
+data/*.csv
+data/*.pdf
+
+# Rebuildable outputs
+outputs/*.csv
+outputs/*.json
