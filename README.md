@@ -1,3 +1,7 @@
+## Live Demo
+
+https://vireo-support-intelligence.streamlit.app
+
 # Vireo Support Intelligence
 
 A small AI-assisted support analytics tool for Vireo Audio. It delivers the client's requested per-agent CSAT/handle-time view and raw bottom ten, while adding context so hard queues are not mistaken for poor agents. It also surfaces a product-lot signal that helps explain the festive-season CSAT decline.
