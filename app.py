@@ -26,6 +26,7 @@ from src.metrics import (
 from src.model import add_expected_csat, agent_case_mix_context, build_case_mix_model
 from src.text_insights import low_csat_themes
 from src.validation import data_quality_checks
+from src.upload_data import get_uploaded_data_dir
 
 st.set_page_config(
     page_title="Vireo Support Intelligence",
@@ -47,8 +48,8 @@ st.markdown(
 
 
 @st.cache_data(show_spinner=False)
-def load_prepared():
-    return prepare_all(DATA_DIR)
+def load_prepared(data_dir: str):
+    return prepare_all(Path(data_dir))
 
 
 @st.cache_resource(show_spinner=False)
@@ -74,7 +75,30 @@ def duration_minutes(v: float) -> str:
     return f"{v/(24*60):.1f} d"
 
 
-data = load_prepared()
+REQUIRED_DATA_FILES = [
+    "tickets.csv",
+    "agents.csv",
+    "orders.csv",
+    "products.csv",
+]
+
+local_data_available = all(
+    (DATA_DIR / filename).exists()
+    for filename in REQUIRED_DATA_FILES
+)
+
+if local_data_available:
+    active_data_dir = DATA_DIR
+else:
+    active_data_dir = get_uploaded_data_dir()
+
+    if active_data_dir is None:
+        st.info(
+            "Upload all four supplied Vireo CSV files above to start the dashboard."
+        )
+        st.stop()
+
+data = load_prepared(str(active_data_dir))
 tickets = data["tickets_enriched"]
 model, model_eval = train_model(tickets)
 tickets_model = add_expected_csat(tickets, model)
